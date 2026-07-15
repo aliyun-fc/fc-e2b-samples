@@ -31,11 +31,17 @@ class SandboxManager:
 
     def create(self, template_name: str | None = None, idle_timeout: int | None = None) -> dict[str, Any]:
         settings = get_settings()
-        if not settings.e2b_api_key:
-            raise RuntimeError("E2B_API_KEY is required; copy env.example to .env and configure it.")
+        self._require_alibaba_e2b_settings(settings)
         try:
             template = template_name or settings.e2b_template or self._build_template(settings.e2b_browser_image)
-            self._sandbox = Sandbox.create(template=template, api_key=settings.e2b_api_key, timeout=idle_timeout or settings.e2b_timeout, allow_internet_access=True)
+            self._sandbox = Sandbox.create(
+                template=template,
+                api_key=settings.e2b_api_key,
+                api_url=settings.e2b_api_url,
+                domain=settings.e2b_domain,
+                timeout=idle_timeout or settings.e2b_timeout,
+                allow_internet_access=True,
+            )
             self._sandbox_id = self._sandbox.sandbox_id
             self._start_browsertool()
             host = self._sandbox.get_host(BROWSERTOOL_PORT)
@@ -55,9 +61,35 @@ class SandboxManager:
     @staticmethod
     def _build_template(image: str) -> str:
         settings = get_settings()
+        SandboxManager._require_alibaba_e2b_settings(settings)
         name = f"browseruse-e2b-{int(time.time())}"
         print(f"Building E2B template {name} from {image}")
-        return Template.build(Template().from_image(image=image), name, api_key=settings.e2b_api_key, cpu_count=2, memory_mb=2048).name
+        return Template.build(
+            Template().from_image(image=image),
+            name,
+            api_key=settings.e2b_api_key,
+            api_url=settings.e2b_api_url,
+            domain=settings.e2b_domain,
+            cpu_count=2,
+            memory_mb=2048,
+        ).name
+
+    @staticmethod
+    def _require_alibaba_e2b_settings(settings: Any) -> None:
+        missing = [
+            name
+            for name, value in {
+                "E2B_API_KEY": settings.e2b_api_key,
+                "E2B_API_URL": settings.e2b_api_url,
+                "E2B_DOMAIN": settings.e2b_domain,
+            }.items()
+            if not value
+        ]
+        if missing:
+            raise RuntimeError(
+                "Alibaba Cloud E2B requires these environment variables: "
+                + ", ".join(missing)
+            )
 
     def _start_browsertool(self) -> None:
         assert self._sandbox is not None

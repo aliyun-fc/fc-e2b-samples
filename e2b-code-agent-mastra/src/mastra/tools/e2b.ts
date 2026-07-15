@@ -5,8 +5,16 @@ import { Sandbox } from '@e2b/code-interpreter';
 // ---------------------------------------------------------------------------
 // E2B connection config — read from env
 // ---------------------------------------------------------------------------
-const E2B_DOMAIN = process.env.E2B_DOMAIN || 'localhost';
-const E2B_API_URL = process.env.E2B_API_URL || `http://${E2B_DOMAIN}:8082`;
+const requiredEnv = (name: string) => {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Alibaba Cloud E2B requires ${name}`);
+  }
+  return value;
+};
+
+const E2B_DOMAIN = requiredEnv('E2B_DOMAIN');
+const E2B_API_URL = requiredEnv('E2B_API_URL');
 const E2B_TEMPLATE = process.env.E2B_TEMPLATE || 'code-interpreter-v1';
 
 const connOpts = { domain: E2B_DOMAIN, apiUrl: E2B_API_URL };

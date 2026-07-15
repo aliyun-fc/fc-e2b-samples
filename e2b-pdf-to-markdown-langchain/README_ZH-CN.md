@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-LangChain Agent 运行在控制端，E2B Sandbox 运行文档转换器。流程明确拆成三个独立步骤：
+LangChain Agent 运行在控制端，阿里云 E2B Sandbox 运行文档转换器。流程明确拆成三个独立步骤：
 
 1. 构建并推送 Docker 镜像。
 2. 根据镜像构建并持久化 E2B Template。
@@ -58,9 +58,9 @@ docker buildx imagetools inspect "$IMAGE"
 ## 2. 构建 E2B Template
 ### 2.1 环境变量配置
 
-1. 必须设置 `E2B_API_KEY`。
+1. 必须设置阿里云 E2B 的 `E2B_API_KEY`、`E2B_API_URL` 和 `E2B_DOMAIN`。
 2. 此阶段的 `E2B_TEMPLATE_IMAGE` 必须与第 1 步中的 `$IMAGE` 相同。
-3. `E2B_API_URL` 和 `E2B_DOMAIN` 在代码中是可选项。使用下例中的地域时应保留对应值；只有 SDK 默认端点与 API Key 所属地域一致时才可同时留空。
+3. `E2B_API_URL` 和 `E2B_DOMAIN` 必须与 API Key 所属阿里云 E2B 地域匹配。
 
 
 创建 `.env`：
@@ -141,7 +141,7 @@ E2B_TEMPLATE_ID=v644awqcszuxz43wwcmu
 
 ### 3.1 环境变量
 
-1. `E2B_API_KEY` 必须正确配置。
+1. `E2B_API_KEY`、`E2B_API_URL` 和 `E2B_DOMAIN` 必须正确配置。
 2. `E2B_API_URL` 和 `E2B_DOMAIN` 需与第 2 步相同。
 3. `E2B_TEMPLATE_ID` 需与第 2 步输出的值相同。
 4. `E2B_TIMEOUT` 控制 Sandbox 生命周期，未设置时默认为 `600` 秒。

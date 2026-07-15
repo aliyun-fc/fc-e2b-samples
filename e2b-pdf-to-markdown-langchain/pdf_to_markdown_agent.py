@@ -65,8 +65,8 @@ def convert_pdf(pdf_path: str | Path, template_id: str | None = None) -> str:
         template=_template_id(template_id),
         timeout=int(os.getenv("E2B_TIMEOUT", "600")),
         api_key=required_env("E2B_API_KEY"),
-        api_url=os.getenv("E2B_API_URL") or None,
-        domain=os.getenv("E2B_DOMAIN") or None,
+        api_url=required_env("E2B_API_URL"),
+        domain=required_env("E2B_DOMAIN"),
     )
     try:
         LOGGER.info("[sandbox] ready sandbox_id=%s", sandbox.sandbox_id)

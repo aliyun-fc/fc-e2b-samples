@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-一个基于 Mastra 的高级模板，提供可在安全、隔离的 E2B Sandbox 中规划、编写、执行和迭代代码的编码 Agent，并具备文件管理和开发工作流能力。
+一个基于 Mastra 的高级模板，提供可在安全、隔离的阿里云 E2B Sandbox 中规划、编写、执行和迭代代码的编码 Agent，并具备文件管理和开发工作流能力。
 
 ## 概述
 
@@ -21,7 +21,7 @@
 ## 前置条件
 
 - Node.js 20 或更高版本。
-- E2B API Key（在 [e2b.dev](https://e2b.dev) 注册）。
+- 阿里云 E2B API Key、API URL 和 Sandbox 域名。
 - OpenAI API Key。
 
 ## 安装
@@ -37,7 +37,7 @@
 
    ```bash
    cp env.example .env
-   # 编辑 .env，填入 API Key。
+   # 编辑 .env，填入 E2B_API_KEY、E2B_API_URL、E2B_DOMAIN 和模型 API Key。
    ```
 
    ```env
@@ -134,6 +134,9 @@ OPENAI_API_KEY=sk-xxx
 OPENAI_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
 ```
 
+`E2B_API_KEY`、`E2B_API_URL` 和 `E2B_DOMAIN` 均为必填。本 demo 面向阿里云 E2B，
+不会回退到本地 E2B endpoint。
+
 ### 自定义
 
 可以修改 `src/mastra/agents/coding-agent.ts` 中的指令来自定义 Agent 行为：
@@ -152,9 +155,9 @@ export const codingAgent = new Agent({
 
 ## 常见问题
 
-### “E2B_API_KEY is not set”
+### “Alibaba Cloud E2B requires ...”
 
-- 确认已设置环境变量。
+- 确认已设置 `E2B_API_KEY`、`E2B_API_URL` 和 `E2B_DOMAIN`。
 - 检查 API Key 有效且额度充足。
 - 确认 E2B 账号已正确配置。
 

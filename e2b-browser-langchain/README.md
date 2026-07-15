@@ -2,7 +2,7 @@
 
 [中文文档](README_ZH-CN.md)
 
-An interactive browser-automation demo using a LangChain agent and an E2B
+An interactive browser-automation demo using a LangChain agent and an Alibaba Cloud E2B
 Browser Sandbox. The agent connects to Chromium through browsertool's CDP
 WebSocket endpoint to navigate pages and take screenshots. The CDP connection
 automatically includes the E2B access token.
@@ -29,7 +29,7 @@ uv pip install -r requirements.txt
 python -m playwright install chromium
 
 cp env.example .env
-# Edit .env and set E2B_API_KEY plus OpenAI-compatible model settings.
+# Edit .env and set E2B_API_KEY, E2B_API_URL, E2B_DOMAIN, and model settings.
 python main.py
 ```
 
@@ -49,8 +49,9 @@ or press Ctrl+C/Ctrl+D, to destroy the sandbox.
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `E2B_API_KEY` | yes | E2B API key. |
-| `E2B_API_URL` / `E2B_DOMAIN` | no | API endpoint and domain for an E2B-compatible regional deployment. |
+| `E2B_API_KEY` | yes | Alibaba Cloud E2B API key. |
+| `E2B_API_URL` | yes | Alibaba Cloud E2B API URL. |
+| `E2B_DOMAIN` | yes | Alibaba Cloud E2B sandbox domain. |
 | `E2B_BROWSER_IMAGE` | no | Image used to build the temporary browser template; the built-in image is used by default. |
 | `E2B_TIMEOUT` | no | Sandbox lifetime in seconds; defaults to `600`. |
 | `OPENAI_API_KEY` | yes | API key for the OpenAI-compatible provider. |

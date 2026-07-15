@@ -2,13 +2,13 @@
 
 [English](README.md)
 
-一个使用 E2B Code Interpreter SDK 的最小示例：创建 Sandbox、在其中运行 Python 代码，并销毁 Sandbox。
+一个使用阿里云 E2B Code Interpreter SDK 的最小示例：创建 Sandbox、在其中运行 Python 代码，并销毁 Sandbox。
 
 ## 功能
 
 1. **创建 Sandbox**：启动带有 Python 解释器的隔离云环境。
 2. **计算圆面积**：运行 Python 代码计算半径为 5 的圆面积。
-3. **计算周长**：在同一 Sandbox 中继续运行代码，展示状态持久化（`radius` 变量会在多次执行间保留）。
+3. **计算周长**：在同一 Sandbox 中继续运行代码，通过读取第一次执行保存的半径展示状态持久化。
 4. **销毁 Sandbox**：释放全部资源。
 
 ## 快速开始
@@ -23,7 +23,7 @@ uv pip install -r requirements.txt
 
 # 3. 配置环境变量
 cp env.example .env
-# 编辑 .env，填写 E2B_API_KEY。
+# 编辑 .env，填写 E2B_API_KEY、E2B_API_URL 和 E2B_DOMAIN。
 
 # 4. 运行示例
 python code_exec.py
@@ -35,9 +35,9 @@ E2B SDK 会自动读取以下变量，无需在代码中显式传递。
 
 | 变量 | 必填 | 说明 |
 |---|---|---|
-| `E2B_API_KEY` | 是 | E2B API Key。 |
-| `E2B_DOMAIN` | 否 | 自定义 E2B-compatible Sandbox 域名。 |
-| `E2B_API_URL` | 否 | 自定义 E2B-compatible 控制面 API URL。 |
+| `E2B_API_KEY` | 是 | 阿里云 E2B API Key。 |
+| `E2B_API_URL` | 是 | 阿里云 E2B 控制面 API URL。 |
+| `E2B_DOMAIN` | 是 | 阿里云 E2B Sandbox 域名。 |
 
 ## SDK 用法（最小示例）
 

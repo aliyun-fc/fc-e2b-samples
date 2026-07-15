@@ -52,8 +52,8 @@ def build_document_template() -> str:
         "cpu_count": int(os.getenv("E2B_TEMPLATE_CPU", "2")),
         "memory_mb": int(os.getenv("E2B_TEMPLATE_MEMORY_MB", "2048")),
         "api_key": api_key,
-        "api_url": os.getenv("E2B_API_URL") or None,
-        "domain": os.getenv("E2B_DOMAIN") or None,
+        "api_url": required_env("E2B_API_URL"),
+        "domain": required_env("E2B_DOMAIN"),
     }
     if headers:
         build_kwargs["headers"] = headers

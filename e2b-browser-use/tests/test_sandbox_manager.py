@@ -73,6 +73,8 @@ def load_manager(*, token: str = "access-token") -> types.ModuleType:
     fake_config = types.ModuleType("config")
     fake_config.get_settings = lambda: types.SimpleNamespace(
         e2b_api_key="e2b-test-key",
+        e2b_api_url="https://api.us-west-1.e2b.fc.aliyuncs.com",
+        e2b_domain="us-west-1.e2b.fc.aliyuncs.com",
         e2b_template="configured-template",
         e2b_timeout=600,
         e2b_browser_image="unused-image",
@@ -123,6 +125,8 @@ class SandboxManagerTests(unittest.TestCase):
         sandbox = manager_module.Sandbox.last
         assert sandbox is not None
         self.assertEqual(sandbox.create_kwargs["template"], "configured-template")
+        self.assertEqual(sandbox.create_kwargs["api_url"], "https://api.us-west-1.e2b.fc.aliyuncs.com")
+        self.assertEqual(sandbox.create_kwargs["domain"], "us-west-1.e2b.fc.aliyuncs.com")
         self.assertTrue(any("process-compose up" in call[0] for call in sandbox.commands.calls))
 
     def test_cleans_up_when_the_access_token_is_missing(self) -> None:

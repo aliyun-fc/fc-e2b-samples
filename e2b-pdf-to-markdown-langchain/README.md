@@ -2,7 +2,7 @@
 
 [中文文档](README_ZH-CN.md)
 
-The LangChain Agent runs on the controller and the E2B Sandbox runs the
+The LangChain Agent runs on the controller and the Alibaba Cloud E2B Sandbox runs the
 document converter. The workflow is split into three independent steps:
 
 1. Build and push the Docker image.
@@ -64,9 +64,9 @@ docker buildx imagetools inspect "$IMAGE"
 
 ### 2.1 Configure environment variables
 
-1. `E2B_API_KEY` is required.
+1. `E2B_API_KEY`, `E2B_API_URL`, and `E2B_DOMAIN` are required for Alibaba Cloud E2B.
 2. `E2B_TEMPLATE_IMAGE` must match `$IMAGE` from step 1.
-3. `E2B_API_URL` and `E2B_DOMAIN` are optional in code. Keep the matching regional values when using the region shown below; leave both blank only when the SDK default endpoint matches the API key's region.
+3. `E2B_API_URL` and `E2B_DOMAIN` must match the Alibaba Cloud E2B region for the API key.
 
 Create `.env`:
 
@@ -150,7 +150,7 @@ configuration changes.
 
 ### 3.1 Environment variables
 
-1. `E2B_API_KEY` must be configured correctly.
+1. `E2B_API_KEY`, `E2B_API_URL`, and `E2B_DOMAIN` must be configured correctly.
 2. `E2B_API_URL` and `E2B_DOMAIN` must match the values from step 2.
 3. `E2B_TEMPLATE_ID` must match the value printed in step 2.
 4. `E2B_TIMEOUT` controls the Sandbox lifetime and defaults to `600` seconds when unset.

@@ -57,26 +57,39 @@ class BrowserService:
             await self.runs.emit(run, "run.failed", error=run.error)
 
     def _create_sandbox(self):
-        if not self.settings.e2b_api_key:
-            raise RuntimeError("E2B_API_KEY 未配置；请复制 env.example 到 .env 后填写。")
+        missing = [
+            name
+            for name, value in {
+                "E2B_API_KEY": self.settings.e2b_api_key,
+                "E2B_API_URL": self.settings.e2b_api_url,
+                "E2B_DOMAIN": self.settings.e2b_domain,
+            }.items()
+            if not value
+        ]
+        if missing:
+            raise RuntimeError("阿里云 E2B 必须配置环境变量：" + ", ".join(missing))
         from e2b import Sandbox, Template
 
+        api_opts = self._e2b_api_opts()
         template = self.settings.e2b_template
         if not template:
             template = Template.build(
                 Template().from_image(image=self.settings.e2b_browser_image),
                 f"browser-studio-{int(time.time())}",
-                api_key=self.settings.e2b_api_key,
                 cpu_count=2,
                 memory_mb=2048,
+                **api_opts,
             ).name
         kwargs = {"template": template, "api_key": self.settings.e2b_api_key,
                   "timeout": self.settings.e2b_timeout, "allow_internet_access": True}
-        if self.settings.e2b_api_url:
-            kwargs["api_url"] = self.settings.e2b_api_url
-        if self.settings.e2b_domain:
-            kwargs["domain"] = self.settings.e2b_domain
+        kwargs.update(api_opts)
         return Sandbox.create(**kwargs), template
+
+    def _e2b_api_opts(self) -> dict[str, str]:
+        opts = {"api_key": self.settings.e2b_api_key}
+        opts["api_url"] = self.settings.e2b_api_url
+        opts["domain"] = self.settings.e2b_domain
+        return opts
 
     @staticmethod
     def _start_browsertool(sandbox) -> None:
@@ -119,7 +132,7 @@ class BrowserService:
             raise RuntimeError("E2B 未返回 browsertool 所需的访问令牌。")
         cdp_url = f"wss://{host}/ws/automation"
         with sync_playwright() as playwright:
-            browser = playwright.chromium.connect_over_cdp(cdp_url, headers={"X-Access-Token": token})
+            browser = self._connect_over_cdp_with_retry(playwright, cdp_url, token)
             context = browser.contexts[0] if browser.contexts else browser.new_context()
             page = context.pages[0] if context.pages else context.new_page()
             page.goto(url, wait_until="domcontentloaded", timeout=60_000)
@@ -128,3 +141,19 @@ class BrowserService:
             title, final_url = page.title(), page.url
             browser.close()
             return title, final_url, screenshot
+
+    @staticmethod
+    def _connect_over_cdp_with_retry(playwright, cdp_url: str, token: str):
+        deadline = time.monotonic() + 90
+        last_error: Exception | None = None
+        while time.monotonic() < deadline:
+            try:
+                return playwright.chromium.connect_over_cdp(
+                    cdp_url,
+                    headers={"X-Access-Token": token},
+                    timeout=10_000,
+                )
+            except Exception as exc:
+                last_error = exc
+                time.sleep(3)
+        raise RuntimeError(f"browsertool CDP did not become ready: {last_error}")

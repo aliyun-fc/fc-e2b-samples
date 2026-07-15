@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-一个使用 LangChain Agent 和 E2B Browser Sandbox 的交互式浏览器自动化示例。Agent 通过 browsertool 的 CDP WebSocket 连接 Chromium，执行导航和截图；CDP 连接会自动携带 E2B 访问令牌。
+一个使用 LangChain Agent 和阿里云 E2B Browser Sandbox 的交互式浏览器自动化示例。Agent 通过 browsertool 的 CDP WebSocket 连接 Chromium，执行导航和截图；CDP 连接会自动携带 E2B 访问令牌。
 
 ## 功能
 
@@ -26,7 +26,7 @@ uv pip install -r requirements.txt
 python -m playwright install chromium
 
 cp env.example .env
-# 编辑 .env，填写 E2B_API_KEY 和 OpenAI-compatible 模型配置
+# 编辑 .env，填写 E2B_API_KEY、E2B_API_URL、E2B_DOMAIN 和模型配置
 python main.py
 ```
 
@@ -42,8 +42,9 @@ python main.py --quiet
 
 | 变量 | 必填 | 说明 |
 | --- | --- | --- |
-| `E2B_API_KEY` | 是 | E2B API Key。 |
-| `E2B_API_URL` / `E2B_DOMAIN` | 否 | E2B-compatible 区域部署需要的 API 端点与域名。 |
+| `E2B_API_KEY` | 是 | 阿里云 E2B API Key。 |
+| `E2B_API_URL` | 是 | 阿里云 E2B API URL。 |
+| `E2B_DOMAIN` | 是 | 阿里云 E2B Sandbox 域名。 |
 | `E2B_BROWSER_IMAGE` | 否 | 用于构建临时浏览器模板的镜像；默认使用项目内置镜像。 |
 | `E2B_TIMEOUT` | 否 | Sandbox 生命周期超时秒数，默认 `600`。 |
 | `OPENAI_API_KEY` | 是 | OpenAI-compatible 服务的 API Key。 |

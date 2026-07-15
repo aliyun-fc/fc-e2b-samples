@@ -16,6 +16,8 @@ from e2b import Sandbox, Template
 load_dotenv(Path(__file__).resolve().parent / ".env", override=True)
 
 E2B_API_KEY = os.environ["E2B_API_KEY"]
+E2B_API_URL = os.environ["E2B_API_URL"]
+E2B_DOMAIN = os.environ["E2B_DOMAIN"]
 
 IMAGE = "fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.32"
 TEMPLATE_NAME = f"browser-sandbox-{int(time.time())}"
@@ -79,7 +81,7 @@ with sync_playwright() as playwright:
     browser = playwright.chromium.connect_over_cdp(
         os.environ["CDP_URL"],
         headers={"X-Access-Token": os.environ["CDP_TOKEN"]},
-        timeout=30_000,
+        timeout=10_000,
     )
     print("child: connected", flush=True)
     try:
@@ -123,6 +125,24 @@ with sync_playwright() as playwright:
         )
 
 
+def verify_with_playwright_retry(cdp_ws_url: str, headers: dict[str, str]) -> None:
+    """Retry Playwright CDP verification until browsertool is fully ready."""
+    deadline = time.monotonic() + 90
+    last_error = ""
+    attempt = 0
+    while time.monotonic() < deadline:
+        attempt += 1
+        try:
+            print(f"Playwright CDP attempt #{attempt}")
+            verify_with_playwright(cdp_ws_url, headers)
+            return
+        except RuntimeError as exc:
+            last_error = str(exc)
+            print(f"  not ready: {last_error.splitlines()[-1] if last_error else exc}")
+            time.sleep(3)
+    raise RuntimeError(f"Playwright CDP verification failed after retries:\n{last_error}")
+
+
 def main() -> None:
     print(f"Building template from image: {IMAGE}")
     print(f"Template name: {TEMPLATE_NAME}")
@@ -133,6 +153,8 @@ def main() -> None:
         registry_template,
         TEMPLATE_NAME,
         api_key=E2B_API_KEY,
+        api_url=E2B_API_URL,
+        domain=E2B_DOMAIN,
         cpu_count=2,
         memory_mb=2048,
     )
@@ -143,6 +165,8 @@ def main() -> None:
     sbx = Sandbox.create(
         template=template,
         api_key=E2B_API_KEY,
+        api_url=E2B_API_URL,
+        domain=E2B_DOMAIN,
         timeout=600,
         allow_internet_access=True,
     )
@@ -178,7 +202,7 @@ def main() -> None:
         token = sbx._envd_access_token
         if token:
             headers["X-Access-Token"] = token
-        verify_with_playwright(cdp_ws_url, headers)
+        verify_with_playwright_retry(cdp_ws_url, headers)
     finally:
         sbx.kill()
         print("\nSandbox killed")

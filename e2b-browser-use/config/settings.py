@@ -13,6 +13,8 @@ class Settings(BaseModel):
     """Runtime settings read from the environment."""
 
     e2b_api_key: str = Field(default_factory=lambda: os.getenv("E2B_API_KEY", ""))
+    e2b_api_url: str = Field(default_factory=lambda: os.getenv("E2B_API_URL", ""))
+    e2b_domain: str = Field(default_factory=lambda: os.getenv("E2B_DOMAIN", ""))
     e2b_template: str = Field(default_factory=lambda: os.getenv("E2B_TEMPLATE", ""))
     e2b_timeout: int = Field(default_factory=lambda: int(os.getenv("E2B_TIMEOUT", "600")))
     e2b_browser_image: str = Field(default_factory=lambda: os.getenv("E2B_BROWSER_IMAGE", "fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.32"))

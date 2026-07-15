@@ -2,8 +2,8 @@
 
 [中文文档](README_ZH-CN.md)
 
-Run [BrowserUse](https://github.com/browser-use/browser-use) agents in an E2B
-browser sandbox. The demo starts `browsertool` in the sandbox and connects
+Run [BrowserUse](https://github.com/browser-use/browser-use) agents in an
+Alibaba Cloud E2B browser sandbox. The demo starts `browsertool` in the sandbox and connects
 BrowserUse to its Chrome DevTools Protocol (CDP) endpoint with E2B's access
 token. It includes a basic task and a multi-task session-reuse example.
 
@@ -16,7 +16,7 @@ source .venv/bin/activate
 uv pip install -r requirements.txt
 
 cp env.example .env
-# Set E2B_API_KEY and the OpenAI-compatible provider variables in .env.
+# Set E2B_API_KEY, E2B_API_URL, E2B_DOMAIN, and provider variables in .env.
 
 python examples/01_browseruse_basic.py
 python examples/02_browseruse_advanced.py
@@ -40,8 +40,9 @@ failures, session reuse, and safe replacement of an existing session.
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `E2B_API_KEY` | yes | Creates and manages the E2B sandbox. |
-| `E2B_API_URL` / `E2B_DOMAIN` | no | Optional E2B-compatible regional endpoint configuration. |
+| `E2B_API_KEY` | yes | Alibaba Cloud E2B API key. |
+| `E2B_API_URL` | yes | Alibaba Cloud E2B API URL. |
+| `E2B_DOMAIN` | yes | Alibaba Cloud E2B sandbox domain. |
 | `E2B_TEMPLATE` | no | Existing browser template to reuse. |
 | `E2B_BROWSER_IMAGE` | no | Image used to build a temporary template when no template is set. |
 | `E2B_TIMEOUT` | no | Sandbox lifetime in seconds; defaults to `600`. |
@@ -67,7 +68,7 @@ with the same values reuses the existing browser session.
 ## Troubleshooting
 
 - **Missing environment variables**: copy `env.example` to `.env`, then set
-  `E2B_API_KEY` and `OPENAI_API_KEY`.
+  `E2B_API_KEY`, `E2B_API_URL`, `E2B_DOMAIN`, and `OPENAI_API_KEY`.
 - **browsertool does not become ready**: verify that the browser image is
   available to your E2B deployment. The raised error includes the browsertool
   process log tail.

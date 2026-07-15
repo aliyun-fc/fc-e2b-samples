@@ -36,9 +36,8 @@ class SandboxManager:
             emit(self._event_sink, "sandbox.reused", sandbox_id=self._sandbox.sandbox_id)
             return self.get_info()
 
-        api_key = os.getenv("E2B_API_KEY")
-        if not api_key:
-            raise RuntimeError("请设置 E2B_API_KEY")
+        api_opts = self._alibaba_e2b_api_opts()
+        api_key = api_opts["api_key"]
 
         emit(self._event_sink, "template.build.started")
         template = self._build_template(api_key)
@@ -50,9 +49,9 @@ class SandboxManager:
             emit(self._event_sink, "sandbox.create.started", template=template, timeout=timeout)
             self._sandbox = Sandbox.create(
                 template=template,
-                api_key=api_key,
                 timeout=timeout,
                 allow_internet_access=True,
+                **api_opts,
             )
             emit(self._event_sink, "sandbox.create.completed", sandbox_id=self._sandbox.sandbox_id)
             self._start_browsertool()
@@ -113,11 +112,27 @@ class SandboxManager:
         build_info = Template.build(
             Template().from_image(image=image),
             template_name,
-            api_key=api_key,
+            **self._alibaba_e2b_api_opts(),
             cpu_count=2,
             memory_mb=2048,
         )
         return build_info.name
+
+    @staticmethod
+    def _alibaba_e2b_api_opts() -> dict[str, str]:
+        values = {
+            "api_key": os.getenv("E2B_API_KEY", "").strip(),
+            "api_url": os.getenv("E2B_API_URL", "").strip(),
+            "domain": os.getenv("E2B_DOMAIN", "").strip(),
+        }
+        missing = [name for key, name in {
+            "api_key": "E2B_API_KEY",
+            "api_url": "E2B_API_URL",
+            "domain": "E2B_DOMAIN",
+        }.items() if not values[key]]
+        if missing:
+            raise RuntimeError("阿里云 E2B 必须设置环境变量: " + ", ".join(missing))
+        return values
 
     def _start_browsertool(self) -> None:
         """Start browsertool in the sandbox and wait until its health check succeeds."""

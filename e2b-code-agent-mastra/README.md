@@ -2,7 +2,7 @@
 
 [中文文档](README_ZH-CN.md)
 
-An advanced Mastra template that provides a coding agent capable of planning, writing, executing, and iterating on code in secure, isolated E2B sandboxes with comprehensive file management and development workflow capabilities.
+An advanced Mastra template that provides a coding agent capable of planning, writing, executing, and iterating on code in secure, isolated Alibaba Cloud E2B sandboxes with comprehensive file management and development workflow capabilities.
 
 ## Overview
 
@@ -21,7 +21,7 @@ This template demonstrates how to build an AI coding assistant that can work wit
 ## Prerequisites
 
 - Node.js 20 or higher
-- E2B API key (sign up at [e2b.dev](https://e2b.dev))
+- Alibaba Cloud E2B API key, API URL, and sandbox domain
 - OpenAI API key
 
 ## Setup
@@ -37,7 +37,7 @@ This template demonstrates how to build an AI coding assistant that can work wit
 
    ```bash
    cp env.example .env
-   # Edit .env and add your API keys
+   # Edit .env and add E2B_API_KEY, E2B_API_URL, E2B_DOMAIN, and model API keys
    ```
 
    ```env
@@ -134,6 +134,9 @@ OPENAI_API_KEY=sk-xxx
 OPENAI_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
 ```
 
+`E2B_API_KEY`, `E2B_API_URL`, and `E2B_DOMAIN` are required. This demo targets
+Alibaba Cloud E2B and does not fall back to a local E2B endpoint.
+
 ### Customization
 
 You can customize the agent behavior by modifying the instructions in `src/mastra/agents/coding-agent.ts`:
@@ -152,9 +155,9 @@ export const codingAgent = new Agent({
 
 ## Common Issues
 
-### "E2B_API_KEY is not set"
+### "Alibaba Cloud E2B requires ..."
 
-- Make sure you've set the environment variable
+- Make sure `E2B_API_KEY`, `E2B_API_URL`, and `E2B_DOMAIN` are set
 - Check that your API key is valid and has sufficient credits
 - Verify your E2B account is properly configured
 

@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-在 E2B 浏览器 Sandbox 中运行 [BrowserUse](https://github.com/browser-use/browser-use)
+在阿里云 E2B 浏览器 Sandbox 中运行 [BrowserUse](https://github.com/browser-use/browser-use)
 Agent。示例会在 Sandbox 内启动 `browsertool`，并通过携带 E2B 访问令牌的 Chrome
 DevTools Protocol（CDP）端点连接 BrowserUse。它包含基础任务以及多任务会话复用示例。
 
@@ -15,7 +15,7 @@ source .venv/bin/activate
 uv pip install -r requirements.txt
 
 cp env.example .env
-# 在 .env 中设置 E2B_API_KEY 和 OpenAI-compatible 服务商变量。
+# 在 .env 中设置 E2B_API_KEY、E2B_API_URL、E2B_DOMAIN 和模型服务商变量。
 
 python examples/01_browseruse_basic.py
 python examples/02_browseruse_advanced.py
@@ -37,8 +37,9 @@ python -m unittest discover -s tests -v
 
 | 变量 | 必填 | 用途 |
 | --- | --- | --- |
-| `E2B_API_KEY` | 是 | 创建和管理 E2B Sandbox。 |
-| `E2B_API_URL` / `E2B_DOMAIN` | 否 | 可选的 E2B-compatible 区域端点配置。 |
+| `E2B_API_KEY` | 是 | 阿里云 E2B API Key。 |
+| `E2B_API_URL` | 是 | 阿里云 E2B API URL。 |
+| `E2B_DOMAIN` | 是 | 阿里云 E2B Sandbox 域名。 |
 | `E2B_TEMPLATE` | 否 | 要复用的已有浏览器模板。 |
 | `E2B_BROWSER_IMAGE` | 否 | 未设置模板时用于构建临时模板的镜像。 |
 | `E2B_TIMEOUT` | 否 | Sandbox 生命周期秒数；默认 `600`。 |
@@ -59,6 +60,6 @@ Sandbox。使用相同值再次调用 `create_or_get_sandbox` 将复用现有浏
 
 ## 排障
 
-- **缺少环境变量**：将 `env.example` 复制为 `.env`，然后设置 `E2B_API_KEY` 和 `OPENAI_API_KEY`。
+- **缺少环境变量**：将 `env.example` 复制为 `.env`，然后设置 `E2B_API_KEY`、`E2B_API_URL`、`E2B_DOMAIN` 和 `OPENAI_API_KEY`。
 - **browsertool 未就绪**：确认浏览器镜像可被 E2B 部署访问；抛出的错误包含 browsertool 进程日志末尾。
 - **CDP 认证错误**：使用支持远程浏览器 `headers` 选项的 BrowserUse 版本；依赖文件已锁定兼容范围。

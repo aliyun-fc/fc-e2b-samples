@@ -2,6 +2,8 @@
 # Template.build injects the E2B runtime; do not add LangChain or agent code here.
 FROM python:3.13-slim-bookworm
 
+LABEL org.opencontainers.image.source="https://github.com/aliyun-fc/fc-e2b-samples"
+
 USER root
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates curl git \

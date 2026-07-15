@@ -49,6 +49,34 @@ docker push "$IMAGE"
 docker buildx imagetools inspect "$IMAGE"
 ```
 
+## 可选：通过 GitHub Actions 发布到 GHCR
+
+上文的本地手动命令仍是主要发布方式。作为可选示例，
+[`.github/workflows/publish-pdf-template-image.yml`](../.github/workflows/publish-pdf-template-image.yml)
+可在 **Actions** 页面手动触发，也会在推送匹配
+`e2b-pdf-to-markdown-langchain/v*` 的 tag 时将相同镜像发布至 GHCR；不会在分支 push 或
+Pull Request 时运行。
+
+选择 **Publish PDF Template Image** → **Run workflow**，输入如 `0.0.1` 的镜像标签。该
+工作流使用仓库的 `GITHUB_TOKEN` 和 `packages: write` 权限，发布镜像地址为：
+
+```text
+ghcr.io/<repository-owner>/document-conversion-template:<image-tag>
+```
+
+通过 tag 触发时，镜像标签会移除 `v` 前缀。例如，以下命令会发布标签为 `:0.0.1` 的镜像：
+
+```bash
+git tag -a e2b-pdf-to-markdown-langchain/v0.0.1 -m "PDF template 0.0.1"
+git push origin e2b-pdf-to-markdown-langchain/v0.0.1
+```
+
+首次发布后，请在 GitHub Packages 中设置 package 的可见性和访问策略。公开的 GHCR package
+可由 E2B 直接拉取，无需 Template source 凭据。若 package 为私有，请在 `.env` 中设置 GitHub
+用户名 `E2B_TEMPLATE_SOURCE_USERNAME`，以及带 `read:packages` 权限的 classic PAT
+`E2B_TEMPLATE_SOURCE_PASSWORD`；不要提交该文件。无论 package 是否公开，进入第 2 步前都应将
+`E2B_TEMPLATE_IMAGE` 设置为完整的 `ghcr.io/...` 镜像地址。
+
 ## 2. 构建 E2B Template
 
 配置控制端并安装依赖：

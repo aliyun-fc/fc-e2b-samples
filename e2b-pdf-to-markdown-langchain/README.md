@@ -52,6 +52,38 @@ docker push "$IMAGE"
 docker buildx imagetools inspect "$IMAGE"
 ```
 
+## Optional: publish to GHCR with GitHub Actions
+
+The manual commands above remain the primary publishing path. As an optional
+example, [`.github/workflows/publish-pdf-template-image.yml`](../.github/workflows/publish-pdf-template-image.yml)
+publishes the same image to GHCR when manually started from the **Actions** tab,
+or when a tag matching `e2b-pdf-to-markdown-langchain/v*` is pushed. It does
+not run on branch pushes or pull requests.
+
+Select **Publish PDF Template Image** → **Run workflow**, then enter an image
+tag such as `0.0.1`. The workflow uses the repository `GITHUB_TOKEN` with
+`packages: write` permission and publishes:
+
+```text
+ghcr.io/<repository-owner>/document-conversion-template:<image-tag>
+```
+
+For a tag-triggered publish, the `v` prefix is removed for the image tag. For
+example, this publishes the image as `:0.0.1`:
+
+```bash
+git tag -a e2b-pdf-to-markdown-langchain/v0.0.1 -m "PDF template 0.0.1"
+git push origin e2b-pdf-to-markdown-langchain/v0.0.1
+```
+
+After the first publish, set the package visibility and access policy in GitHub
+Packages. A public GHCR package can be fetched by E2B without template-source
+credentials. For a private package, put a GitHub username and a classic PAT with
+`read:packages` in `E2B_TEMPLATE_SOURCE_USERNAME` and
+`E2B_TEMPLATE_SOURCE_PASSWORD` in `.env`; do not commit that file. In either
+case, set `E2B_TEMPLATE_IMAGE` to the complete `ghcr.io/...` image reference
+before step 2.
+
 ## 2. Build the E2B template
 
 Set up the controller configuration and dependencies:

@@ -13,6 +13,26 @@ workflow is intentionally split into three independent steps:
 reusable E2B conversion Tool and LangChain Agent implementation; it never builds
 a template during PDF conversion.
 
+## Prerequisite: install uv
+
+Install `uv` before building the E2B template. On macOS with Homebrew:
+
+```bash
+brew install uv
+uv --version
+```
+
+On macOS or Linux without Homebrew, use the official installer, then start a new
+shell (or reload its profile) before verifying the installation:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv --version
+```
+
+See the [official uv installation guide](https://docs.astral.sh/uv/getting-started/installation/)
+for Windows and other installation methods.
+
 ## 1. Build and push the Docker image
 
 `template/` contains the Builder-mode source image and its dependencies.
@@ -25,8 +45,8 @@ export IMAGE="$REGISTRY/custom/document-conversion-template:0.0.1"
 docker buildx build --load --platform linux/amd64 --provenance=false --sbom=false \
   -t "$IMAGE" template/
 
-export ACR_USERNAME=<registry-username>
-export ACR_PASSWORD=<registry-password-or-temporary-token>
+export ACR_USERNAME="<registry-username>"
+export ACR_PASSWORD="<registry-password-or-temporary-token>"
 printf '%s' "$ACR_PASSWORD" | docker login "$REGISTRY" -u "$ACR_USERNAME" --password-stdin
 docker push "$IMAGE"
 docker buildx imagetools inspect "$IMAGE"
@@ -38,7 +58,7 @@ Set up the controller configuration and dependencies:
 
 ```bash
 cp env.example .env
-# Edit .env: set E2B_API_KEY, E2B_API_URL, E2B_DOMAIN, and E2B_TEMPLATE_IMAGE.
+# Edit .env as described below.
 
 uv venv .venv --python 3.12
 source .venv/bin/activate
@@ -46,18 +66,34 @@ uv pip install -r requirements.txt
 python build_template.py
 ```
 
+For this step, `E2B_API_KEY` and `E2B_TEMPLATE_IMAGE` are required. The image
+must be the complete pushed image reference, matching `$IMAGE` from step 1.
+`E2B_API_URL` and `E2B_DOMAIN` are optional in code; keep the example's
+region-specific values when using that region, or leave both blank only when
+the SDK default endpoint matches the API key.
+
+`E2B_TEMPLATE_CPU` and `E2B_TEMPLATE_MEMORY_MB` control Template Build
+resources and default to `2` CPU and `2048` MB when unset. If the E2B control
+plane needs private-image credentials, set both
+`E2B_TEMPLATE_SOURCE_USERNAME` and `E2B_TEMPLATE_SOURCE_PASSWORD` in `.env`.
+The scripts load `.env` with override enabled, so shell exports of these values
+are replaced by values in `.env`.
+
 `build_template.py` calls `Template().from_image(E2B_TEMPLATE_IMAGE)` and
 `Template.build(...)`, then prints `E2B_TEMPLATE_ID=<template-id>`. Copy that
 value into `.env` as `E2B_TEMPLATE_ID`. Rebuild only when the image or template
 configuration changes.
 
-If the E2B control plane needs private-image credentials, set both
-`E2B_TEMPLATE_SOURCE_USERNAME` and `E2B_TEMPLATE_SOURCE_PASSWORD` in the
-runtime environment before running `build_template.py`.
-
 ## 3. Run the LangChain agent
 
-Set `OPENAI_MODEL`, `OPENAI_API_KEY`, and `OPENAI_BASE_URL` in `.env`, then:
+`E2B_API_KEY` and `E2B_TEMPLATE_ID` are required for every conversion.
+`E2B_TIMEOUT` controls the sandbox lifetime and defaults to `600` seconds;
+`E2B_API_URL` and `E2B_DOMAIN` use the same endpoint rules as step 2. For the
+model-backed command, `OPENAI_API_KEY` is required, while `OPENAI_MODEL` and
+`OPENAI_BASE_URL` default to `gpt-4o-mini` and `https://api.openai.com/v1`.
+`--direct` does not require any `OPENAI_*` variable.
+
+After setting the required values in `.env`, run:
 
 ```bash
 python main.py ./report.pdf --output report.md

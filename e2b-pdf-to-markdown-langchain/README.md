@@ -15,25 +15,17 @@ template once and reuse it; PDF conversion never builds a template.
 
 ## 0. Prerequisites
 
-### 0.1 Install uv
+### 0.1 Install Python 3.12
 
-Install `uv` before building the E2B template. On macOS with Homebrew:
-
-```bash
-brew install uv
-uv --version
-```
-
-On macOS or Linux without Homebrew, use the official installer, then start a new
-shell (or reload its profile) before verifying the installation:
+Install Python 3.12 before building the E2B template. Python's built-in `venv`
+and `pip` are sufficient for this example; installing `uv` is not required.
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-uv --version
+python3.12 --version
 ```
 
-See the [official uv installation guide](https://docs.astral.sh/uv/getting-started/installation/)
-for Windows and other installation methods.
+Use the installation method recommended by your operating system or runtime
+environment to install Python 3.12.
 
 ### 0.2 Create a GitHub Personal Access Token (classic, PAT)
 
@@ -49,7 +41,9 @@ Sign in to [GitHub](https://github.com), then:
 ## 1. Build and push the image to GHCR
 
 `template/` contains the Builder-mode source image and its document-conversion
-dependencies. Run the following commands from this project directory.
+dependencies. Run the following commands from this project directory. Use the
+native `docker build` command and keep `--platform linux/amd64`,
+and `--provenance=false`.
 
 ### 1.1 Build the image
 
@@ -58,7 +52,7 @@ export IMAGE="ghcr.io/<github-username>/document-conversion-template:0.0.2"
 export GHCR_USERNAME="<github-username>"
 export GHCR_TOKEN="<classic-pat-with-write-packages>"
 
-docker buildx build --load --platform linux/amd64 --provenance=false --sbom=false \
+docker build --platform linux/amd64 --provenance=false \
   -t "$IMAGE" template/
 
 printf '%s' "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
@@ -100,8 +94,8 @@ E2B_TEMPLATE_SOURCE_PASSWORD=your_github_pat
 E2B_TEMPLATE_CPU=2
 E2B_TEMPLATE_MEMORY_MB=2048
 
-# Set this to the value printed by python build_template.py.
-E2B_TEMPLATE_ID=<template-id>
+# Set this to the value printed by python build_template.py. Leave it empty for now.
+E2B_TEMPLATE_ID=<leave-it-empty>
 ```
 
 Exception:
@@ -129,10 +123,22 @@ Notes:
 ### 2.2 Initialize and build the template
 
 ```bash
-uv venv .venv --python 3.12
+python3.12 -m venv .venv
 source .venv/bin/activate
-uv pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 python build_template.py
+```
+
+After completion, the output includes the template ID:
+
+```text
+...
+cmu/builds/90e71a44-1560-48c4-b6be-757eaae4b015/status
+2026-07-15 16:29:38,565 INFO HTTP Request: GET https://api.us-west-1.e2b.fc.aliyuncs.com/templates/v644awqcszuxz43wwcmu/builds/90e71a44-1560-48c4-b6be-757eaae4b015/status?logsOffset=5&limit=100 "HTTP/2 200 OK"
+2026-07-15 16:29:38,565 INFO Response 200
+2026-07-15 16:29:38,566 INFO [template] ready template=v644awqcszuxz43wwcmu
+E2B_TEMPLATE_ID=v644awqcszuxz43wwcmu
 ```
 
 `build_template.py` calls `Template().from_image(E2B_TEMPLATE_IMAGE)` and

@@ -14,24 +14,16 @@ Template 只需构建一次，重复使用，PDF 转换过程中不会再构建 
 
 ## 0. 前置条件
 
-### 0.1 安装 uv
+### 0.1 安装 Python 3.12
 
-构建 E2B Template 前需要安装 `uv`。macOS 且已安装 Homebrew 时可运行：
-
-```bash
-brew install uv
-uv --version
-```
-
-macOS 或 Linux 未使用 Homebrew 时，可使用官方安装器；完成后请重新打开终端（或重新加载
-shell 配置）再验证安装：
+构建 E2B Template 前需要安装 Python 3.12。Python 自带的 `venv` 和 `pip` 即可完成本示例，
+无需额外安装 `uv`。
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-uv --version
+python3.12 --version
 ```
 
-Windows 及其他安装方式请参阅 [uv 官方安装指南](https://docs.astral.sh/uv/getting-started/installation/)。
+请使用系统或运行环境推荐的方式安装 Python 3.12。
 
 ### 0.2 获取 GitHub Personal Access Token (classic, PAT)
 
@@ -55,7 +47,7 @@ export IMAGE="ghcr.io/<github-username>/document-conversion-template:0.0.2"
 export GHCR_USERNAME="<github-username>"
 export GHCR_TOKEN="<classic-pat-with-write-packages>"
 
-docker buildx build --load --platform linux/amd64 --provenance=false --sbom=false \
+docker build --platform linux/amd64 --provenance=false \
   -t "$IMAGE" template/
 
 printf '%s' "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
@@ -97,8 +89,8 @@ E2B_TEMPLATE_SOURCE_PASSWORD=your_github_pat
 E2B_TEMPLATE_CPU=2
 E2B_TEMPLATE_MEMORY_MB=2048
 
-# 运行 python build_template.py 后，将输出的值填写到这里。
-E2B_TEMPLATE_ID=<template-id>
+# 运行 python build_template.py 后，将输出的值填写到这里, 本步先留空
+E2B_TEMPLATE_ID=<leave-it-empty>
 ```
 
 例外情况：
@@ -123,10 +115,21 @@ fc-e2b-dev-registry-vpc.us-west-1.cr.aliyuncs.com/custom/document-conversion-tem
 ### 2.2 初始化并构建模板
 
 ```bash
-uv venv .venv --python 3.12
+python3.12 -m venv .venv
 source .venv/bin/activate
-uv pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 python build_template.py
+```
+
+完成之后将输出
+```
+...
+cmu/builds/90e71a44-1560-48c4-b6be-757eaae4b015/status
+2026-07-15 16:29:38,565 INFO HTTP Request: GET https://api.us-west-1.e2b.fc.aliyuncs.com/templates/v644awqcszuxz43wwcmu/builds/90e71a44-1560-48c4-b6be-757eaae4b015/status?logsOffset=5&limit=100 "HTTP/2 200 OK"
+2026-07-15 16:29:38,565 INFO Response 200
+2026-07-15 16:29:38,566 INFO [template] ready template=v644awqcszuxz43wwcmu
+E2B_TEMPLATE_ID=v644awqcszuxz43wwcmu
 ```
 
 

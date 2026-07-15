@@ -1,0 +1,11 @@
+[project]
+name = "e2b-browser-cdp"
+version = "0.1.0"
+description = "E2B Browsertool CDP Playwright demo"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "e2b<2.25.0",
+    "playwright>=1.49.0",
+    "python-dotenv>=1.0.0",
+]

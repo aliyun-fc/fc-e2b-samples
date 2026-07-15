@@ -1,0 +1,6 @@
+# E2B SDK
+e2b<2.25.0
+e2b-code-interpreter==2.7.0
+
+# 环境变量管理
+python-dotenv>=1.0.0

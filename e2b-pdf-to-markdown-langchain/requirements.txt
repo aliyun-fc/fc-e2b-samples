@@ -1,0 +1,4 @@
+e2b>=2.0.0,<2.25.0
+langchain>=1.0.0,<2.0.0
+langchain-openai>=1.0.0,<2.0.0
+python-dotenv>=1.0.0,<2.0.0

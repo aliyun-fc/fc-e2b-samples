@@ -1,0 +1,13 @@
+# E2B browser sandbox lifecycle and CDP endpoint access.
+e2b>=2.0.0
+# LangChain agent and OpenAI-compatible chat model integration.
+langchain>=1.0.0,<2.0.0
+langchain-openai>=1.0.0,<2.0.0
+
+# The navigation and screenshot tools import this package locally to connect
+# to the remote E2B browser over CDP. This is not installed in the sandbox.
+playwright>=1.49.0,<2.0.0
+
+# Direct imports used by tool schemas and environment configuration.
+pydantic>=2.0.0,<3.0.0
+python-dotenv>=1.0.0,<2.0.0

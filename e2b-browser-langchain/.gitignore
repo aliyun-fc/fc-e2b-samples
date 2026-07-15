@@ -1,0 +1,5 @@
+.env
+screenshots/
+contexts/
+.env.local
+__pycache__

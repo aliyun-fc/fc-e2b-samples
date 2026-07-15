@@ -1,5 +1,7 @@
 # Browser Sandbox CDP Demo
 
+[中文文档](README_ZH-CN.md)
+
 Start browsertool inside a sandbox, expose the CDP (Chrome DevTools Protocol) WebSocket endpoint, and verify the connection with Playwright.
 
 ## Run

@@ -1,8 +1,0 @@
-.env
-.venv
-__pycache__
-*.pyc
-pdf_to_markdown.py
-langchain_agent.py
-requirements.txt
-README.md

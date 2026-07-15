@@ -44,6 +44,7 @@ env/
 *.json
 *.md
 !README.md
+!README_ZH-CN.md
 !env.example
 
 # Test coverage

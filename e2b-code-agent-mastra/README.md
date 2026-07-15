@@ -1,5 +1,7 @@
 # E2B Code Execution Agent
 
+[中文文档](README_ZH-CN.md)
+
 An advanced Mastra template that provides a coding agent capable of planning, writing, executing, and iterating on code in secure, isolated E2B sandboxes with comprehensive file management and development workflow capabilities.
 
 ## Overview

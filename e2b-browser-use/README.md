@@ -1,5 +1,7 @@
 # BrowserUse + E2B Browser Sandbox Demo
 
+[中文文档](README_ZH-CN.md)
+
 Run [BrowserUse](https://github.com/browser-use/browser-use) agents in an E2B
 browser sandbox. The demo starts `browsertool` in the sandbox and connects
 BrowserUse to its Chrome DevTools Protocol (CDP) endpoint with E2B's access

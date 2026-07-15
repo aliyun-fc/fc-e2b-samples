@@ -1,5 +1,7 @@
 # E2B Code Interpreter Demo
 
+[中文文档](README_ZH-CN.md)
+
 A minimal demo using the E2B Code Interpreter SDK: create a sandbox, run Python code inside it, and tear it down.
 
 ## What it does

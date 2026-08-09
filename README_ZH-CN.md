@@ -19,3 +19,4 @@ E2B_DOMAIN=us-west-1.e2b.fc.aliyuncs.com
 | Browser Studio | 提供面向阿里云 E2B 浏览器的 API 与前端产品外壳。 |
 | PDF-to-Markdown LangChain | 构建文档转换模板，再通过 LangChain 智能体在阿里云 E2B 中将 PDF 转换为 Markdown。 |
 | Mastra Code Agent | 通过沙箱、代码、文件、命令与清理工具，从 Mastra 智能体使用阿里云 E2B。 |
+| Custom Image | 把 e2b 的 envd 移植进从零构建的自定义镜像（supervisord + openresty 多端口路由），并构建成阿里云 E2B 模板。 |

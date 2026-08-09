@@ -20,3 +20,4 @@ E2B_DOMAIN=us-west-1.e2b.fc.aliyuncs.com
 | Browser Studio | Provide an Alibaba Cloud E2B browser-focused API and frontend product shell. |
 | PDF-to-Markdown LangChain | Build a document-conversion template, then use a LangChain agent to convert PDFs to Markdown in Alibaba Cloud E2B. |
 | Mastra Code Agent | Use Alibaba Cloud E2B from a Mastra agent through sandbox, code, file, command, and cleanup tools. |
+| Custom Image | Port e2b's envd into a from-scratch custom image (supervisord + openresty multiport routing) and build it as an Alibaba Cloud E2B template. |

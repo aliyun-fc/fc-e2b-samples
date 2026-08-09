@@ -36,7 +36,7 @@ Direct mode does not inject Function Compute E2B runtime binaries. During image 
 The following Dockerfile is based on the image used by the base template:
 
 ```dockerfile
-ARG FCE2B_BASE_IMAGE=fc-e2b-registry.cn-hangzhou.cr.aliyuncs.com/runtime/base:v0.0.36
+ARG FCE2B_BASE_IMAGE=fc-e2b-registry.cn-hangzhou.cr.aliyuncs.com/runtime/base:v0.0.44
 FROM ${FCE2B_BASE_IMAGE} AS fce2b-runtime
 
 FROM docker.io/library/node:20.20-slim AS node

@@ -16,7 +16,7 @@ load_dotenv(Path(__file__).resolve().parent / ".env", override=True)
 BROWSERTOOL_PORT = 3000
 PROCESS_COMPOSE_CONFIG = "/etc/sandbox/config/process-compose.browsertool.yaml"
 PROCESS_COMPOSE_LOG = "/tmp/browsertool-process-compose.log"
-DEFAULT_BROWSER_IMAGE = "fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.32"
+DEFAULT_BROWSER_IMAGE = "fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.44"
 
 
 class SandboxManager:

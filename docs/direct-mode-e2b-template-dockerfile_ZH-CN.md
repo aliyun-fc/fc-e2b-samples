@@ -34,7 +34,7 @@ Direct 模式直接使用源镜像创建 Template，不会自动注入运行时�
 以下 Dockerfile 基于基础模板所使用的镜像：
 
 ```dockerfile
-ARG FCE2B_BASE_IMAGE=fc-e2b-registry.cn-hangzhou.cr.aliyuncs.com/runtime/base:v0.0.36
+ARG FCE2B_BASE_IMAGE=fc-e2b-registry.cn-hangzhou.cr.aliyuncs.com/runtime/base:v0.0.44
 FROM ${FCE2B_BASE_IMAGE} AS fce2b-runtime
 
 FROM docker.io/library/node:20.20-slim AS node

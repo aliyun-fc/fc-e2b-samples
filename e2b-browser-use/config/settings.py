@@ -17,7 +17,7 @@ class Settings(BaseModel):
     e2b_domain: str = Field(default_factory=lambda: os.getenv("E2B_DOMAIN", ""))
     e2b_template: str = Field(default_factory=lambda: os.getenv("E2B_TEMPLATE", ""))
     e2b_timeout: int = Field(default_factory=lambda: int(os.getenv("E2B_TIMEOUT", "600")))
-    e2b_browser_image: str = Field(default_factory=lambda: os.getenv("E2B_BROWSER_IMAGE", "fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.32"))
+    e2b_browser_image: str = Field(default_factory=lambda: os.getenv("E2B_BROWSER_IMAGE", "fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.44"))
     openai_api_key: str = Field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""))
     openai_base_url: str = Field(default_factory=lambda: os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"))
     openai_model: str = Field(default_factory=lambda: os.getenv("OPENAI_MODEL", "gpt-4.1-mini"))

@@ -19,7 +19,7 @@ E2B_API_KEY = os.environ["E2B_API_KEY"]
 E2B_API_URL = os.environ["E2B_API_URL"]
 E2B_DOMAIN = os.environ["E2B_DOMAIN"]
 
-IMAGE = "fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.32"
+IMAGE = "fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.44"
 TEMPLATE_NAME = f"browser-sandbox-{int(time.time())}"
 
 BROWSERTOOL_PORT = 3000

@@ -37,7 +37,7 @@ python browser_sandbox_demo.py
 本 demo 每次运行都会从写死的浏览器镜像构建临时 template：
 
 ```text
-fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.32
+fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.44
 ```
 
 这样可以让 demo 自包含，但有明确性能成本：启动更慢，重复运行会反复构建 template，

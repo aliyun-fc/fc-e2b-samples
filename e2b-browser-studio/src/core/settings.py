@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     e2b_api_url: str = ""
     e2b_domain: str = ""
     e2b_template: str = ""
-    e2b_browser_image: str = "fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.32"
+    e2b_browser_image: str = "fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.44"
     e2b_timeout: int = 600
     studio_host: str = "127.0.0.1"
     studio_port: int = 8000

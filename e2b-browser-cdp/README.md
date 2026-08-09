@@ -38,7 +38,7 @@ The demo builds a temporary template on every run from a hard-coded browser
 image:
 
 ```text
-fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.32
+fc-e2b-registry.us-west-1.cr.aliyuncs.com/runtime/browser:v0.0.44
 ```
 
 This keeps the demo self-contained, but it has a clear performance cost:
